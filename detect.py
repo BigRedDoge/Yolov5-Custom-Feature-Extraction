@@ -76,6 +76,7 @@ def run(
         half=False,  # use FP16 half-precision inference
         dnn=False,  # use OpenCV DNN for ONNX inference
         vid_stride=1,  # video frame-rate stride
+        show_ouput=False,
 ):
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
@@ -120,17 +121,15 @@ def run(
         with dt[1]:
             visualize = increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False
             pred = model(im, augment=augment, visualize=visualize)
-            #"""
-            channels = pred[0].shape[1]
-            conv = pred[0].cpu()
-            print(conv[0].shape)
-            blocks = torch.chunk(conv, channels, dim=0)
-            #print(blocks[0].shape)
-            #print(blocks[1].squeeze().numpy().shape)
-            for c in range(channels):
-                cv2.imshow('conv', blocks[c].squeeze().numpy())
-                cv2.waitKey(0)
-            #"""
+            
+            if show_ouput:
+                channels = pred[0].shape[1]
+                conv = pred[0].cpu()
+                blocks = torch.chunk(conv, channels, dim=0)
+                for c in range(channels):
+                    cv2.imshow('conv', blocks[c].squeeze().numpy())
+                    cv2.waitKey(0)
+            
         # NMS
         with dt[2]:
             pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
@@ -249,6 +248,7 @@ def parse_opt():
     parser.add_argument('--half', action='store_true', help='use FP16 half-precision inference')
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     parser.add_argument('--vid-stride', type=int, default=1, help='video frame-rate stride')
+    parser.add_argument('--show-output', action='store_true', default=False, help='show output of each layer')
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     print_args(vars(opt))
