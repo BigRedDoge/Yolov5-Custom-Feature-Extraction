@@ -120,7 +120,17 @@ def run(
         with dt[1]:
             visualize = increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False
             pred = model(im, augment=augment, visualize=visualize)
-
+            #"""
+            channels = pred[0].shape[1]
+            conv = pred[0].cpu()
+            print(conv[0].shape)
+            blocks = torch.chunk(conv, channels, dim=0)
+            #print(blocks[0].shape)
+            #print(blocks[1].squeeze().numpy().shape)
+            for c in range(channels):
+                cv2.imshow('conv', blocks[c].squeeze().numpy())
+                cv2.waitKey(0)
+            #"""
         # NMS
         with dt[2]:
             pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)

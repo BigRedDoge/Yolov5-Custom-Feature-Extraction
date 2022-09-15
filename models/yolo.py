@@ -94,6 +94,8 @@ class BaseModel(nn.Module):
 
     def _forward_once(self, x, profile=False, visualize=False):
         y, dt = [], []  # outputs
+        layer = 0
+        output_layer = 1
         for m in self.model:
             if m.f != -1:  # if not from previous layer
                 x = y[m.f] if isinstance(m.f, int) else [x if j == -1 else y[j] for j in m.f]  # from earlier layers
@@ -103,6 +105,12 @@ class BaseModel(nn.Module):
             y.append(x if m.i in self.save else None)  # save output
             if visualize:
                 feature_visualization(x, m.type, m.i, save_dir=visualize)
+            #if isinstance(m, Conv):
+            # if on second convolutional layer, output that layer
+            if layer == output_layer:
+                return x
+            layer += 1
+                
         return x
 
     def _profile_one_layer(self, m, x, dt):
