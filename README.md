@@ -2,6 +2,9 @@
 
 The BaseModel class in yolo.py has been edited to output a specified layer (in this case Stage1_Conv of the yolov5s model, defined by ouput_layer=1)
 
-To change the layer outputed, change the output_layer variable in the forward_once function to the desired layer number from the model yaml.
+### Usage:
+1. Find the layer number from model yaml you want to output (zero indexed)
+2. Edit yolo.py BaseModel forward_once to desired layer number to output.  
+3. Run output.py or use the output_layer function to get desired layer returned
 
 TODO: Make changing the desired output layer to be defined when intializing the model
