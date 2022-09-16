@@ -4,7 +4,7 @@ The BaseModel class in yolo.py has been edited to output a specified layer (in t
 
 ### Usage:
 1. Find the layer number from model yaml you want to output (zero indexed)
-2. Edit yolo.py BaseModel forward_once to desired layer number to output.  
+2. Edit yolo.py BaseModel forward_once variable output_layer to desired layer number to output.  
 3. Run output.py or use the output_layer function to get desired layer returned
 
 TODO: Make changing the desired output layer to be defined when intializing the model
