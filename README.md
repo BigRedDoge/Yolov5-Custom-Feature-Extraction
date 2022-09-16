@@ -1,4 +1,4 @@
-# Yolov5 Modified for Custom Layer Output
+# Yolov5 Modified for Feature Extraction
 
 The BaseModel class in yolo.py has been edited to output a specified layer (in this case Stage1_Conv of the yolov5s model, defined by ouput_layer=1)
 
